@@ -1,0 +1,36 @@
+{
+  "name": "auth",
+  "version": "1.0.0",
+  "description": "Campus Hire",
+  "main": "App.js",
+  "scripts": {
+    "start": "nodemon --exec babel-node src/App.js",
+    "node-debug": "babel-node --inspect src/App.js",
+    "build": "rm -rf dist && npm run build-prod",
+    "build-prod": "babel src --out-dir dist",
+    "serve": "node --experimental-loader=newrelic/esm-loader.mjs dist/App.js",
+    "dev": "babel-node src/App.js",
+    "stage": "node dist/App.js",
+    "prod": "rm -rf dist && npm run build-prod && node dist/App.js"
+  },
+  "author": "test@test.com",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/cli": "^7.17.3",
+    "@babel/node": "^7.16.8",
+    "@babel/preset-env": "^7.16.11",
+    "axios": "^0.26.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^6.3.0",
+    "helmet": "^5.0.2",
+    "joi": "^17.6.0",
+    "mongodb": "^4.4.0",
+    "randomstring": "^1.2.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15",
+    "standard": "^16.0.3"
+  }
+}
