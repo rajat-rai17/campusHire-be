@@ -2,9 +2,8 @@
 
 import Joi from 'joi'
 
-const JoiCreateOTPVMSHeaders = Joi.object({
-  email: Joi.string().required().email(),
-  'app-key': Joi.string().optional()
+const JoiCreateOTPHeaders = Joi.object({
+  email: Joi.string().required().email()
 })
 
 const JoiVerifyOTPVMSHeaders = Joi.object({

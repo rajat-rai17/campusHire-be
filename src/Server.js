@@ -13,11 +13,11 @@ export let mongoClientDB
 
 const Server = async App => {
   try {
-    // const mongoClientUse = new MongoClient(CONNECTION_URI)
-    // await mongoClientUse.connect()
+    const mongoClientUse = new MongoClient(CONNECTION_URI)
+    await mongoClientUse.connect()
 
-    // mongoClientDB = mongoClientUse.db(MONGO_DBNAME_AUTH)
-    // console.log(`[Info] MongoDB Connection to Database ' ${MONGO_DBNAME_AUTH} ' Successful!`)
+    mongoClientDB = mongoClientUse.db(MONGO_DBNAME_AUTH)
+    console.log(`[Info] MongoDB Connection to Database ' ${MONGO_DBNAME_AUTH} ' Successful!`)
     await App.listen(PORT)
     console.log(`[Info] Server Started Successfully! Listening on Port: ${PORT}`)
   } catch (error) {
