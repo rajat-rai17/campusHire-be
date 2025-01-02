@@ -24,6 +24,8 @@ const mongoFind = async (model, query = {}, options) => {
 // Insert ONE
 const mongoInsertOne = async (model, doc) => {
   const thisCollection = mongoClientDB.collection(model)
+  doc.createdAt = new Date()
+  doc.updatedAt = new Date()
   return await thisCollection.insertOne(doc)
 }
 // Insert Many
@@ -37,7 +39,7 @@ const mongoInsertMany = async (model, docs) => {
 const mongoUpdateOne = async (model, filter, updateDoc) => {
   const thisCollection = mongoClientDB.collection(model)
   // this option instructs the method to create a document if no documents match the filter
-  const options = { upsert: true }
+  const options = { upsert: false }
   return await thisCollection.updateOne(filter, updateDoc, options)
 }
 // Update Many
