@@ -13,7 +13,7 @@ const createOTP = async (headers) => {
     const OTP = Math.floor(1000 + Math.random() * 9000);
     //Need to add code for sending OTP email
     const oid = `${Math.random().toString(36).substr(2, 12)}-${email}`
-    await MONGO_MODEL.mongoInsertOne('otp', { oid, otp: OTP }) //OTP collection is TTL indexed for 5 minutes
+    await MONGO_MODEL.mongoInsertOne('otp', { oid, otp: OTP }) 
     return { status: true, message: 'OTP Sent Successfully', oid }
 }
 
@@ -50,7 +50,7 @@ const resendOTP = async (headers) => {
     const otp = Math.floor(1000 + Math.random() * 9000);
     //Need to add code for sending OTP email
     
-    const otpResult = await MONGO_MODEL.mongoUpdateOne('otp', { oid }, { $set: { otp, updatedAt: new Date() } }) //OTP collection is TTL indexed for 10 minutes
+    const otpResult = await MONGO_MODEL.mongoUpdateOne('otp', { oid }, { $set: { otp, updatedAt: new Date() } })
     if (otpResult.matchedCount === 0) return { status: false, message: 'OTP Expired' }
     return { status: true, message: 'OTP Sent Successfully' }
 }
