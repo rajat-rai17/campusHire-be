@@ -5,6 +5,7 @@ import { ResponseBody } from '../../lib'
 import { AxiosHelper } from '../helpers'
 import { SERVER_CONFIG } from '../../config'
 import { OTPRouter } from './OTP'
+import { StudentRouter } from './Student'
 
 const { version } = packageJSON
 
@@ -12,6 +13,7 @@ const { SERVICE_NAME } = SERVER_CONFIG
 
 const Routes = [
   { path: '/otp', router: OTPRouter },
+  { path: '/student', router: StudentRouter },
 
 ]
 Routes.init = (app) => {

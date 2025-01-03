@@ -12,14 +12,14 @@ const mongoFindOne = async (model, query = {}, options) => {
 const mongoFindOneAndUpdate = async (model, filter, updateDoc) => {
   const thisCollection = mongoClientDB.collection(model)
   // this option instructs the method to create a document if no documents match the filter
-  const options = { returnNewDocument: true, upsert: true }
+  const options = { upsert: false }
   return await thisCollection.findOneAndUpdate(filter, updateDoc, options)
 }
 
 // Find Many
 const mongoFind = async (model, query = {}, options) => {
   const thisCollection = mongoClientDB.collection(model)
-  return await thisCollection.find(query, options)
+  return await thisCollection.find(query, options).toArray()
 }
 // Insert ONE
 const mongoInsertOne = async (model, doc) => {
@@ -37,6 +37,14 @@ const mongoInsertMany = async (model, docs) => {
 }
 // Update ONE
 const mongoUpdateOne = async (model, filter, updateDoc) => {
+  const thisCollection = mongoClientDB.collection(model)
+  // this option instructs the method to create a document if no documents match the filter
+  const options = { upsert: true }
+  return await thisCollection.updateOne(filter, updateDoc, options)
+}
+
+// Update ONE
+const mongoUpdateOneWithoutUpsert = async (model, filter, updateDoc) => {
   const thisCollection = mongoClientDB.collection(model)
   // this option instructs the method to create a document if no documents match the filter
   const options = { upsert: false }
@@ -68,5 +76,6 @@ export const MONGO_MODEL = {
   mongoUpdateOne,
   mongoUpdateMany,
   mongoCountDocuments,
-  mongoDeleteOneDocument
+  mongoDeleteOneDocument,
+  mongoUpdateOneWithoutUpsert
 }

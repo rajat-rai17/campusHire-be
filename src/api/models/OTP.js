@@ -50,7 +50,7 @@ const resendOTP = async (headers) => {
     const otp = Math.floor(1000 + Math.random() * 9000);
     //Need to add code for sending OTP email
     
-    const otpResult = await MONGO_MODEL.mongoUpdateOne('otp', { oid }, { $set: { otp, updatedAt: new Date() } })
+    const otpResult = await MONGO_MODEL.mongoUpdateOneWithoutUpsert('otp', { oid }, { $set: { otp, updatedAt: new Date() } })
     if (otpResult.matchedCount === 0) return { status: false, message: 'OTP Expired' }
     return { status: true, message: 'OTP Sent Successfully' }
 }
