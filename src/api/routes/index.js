@@ -6,6 +6,8 @@ import { AxiosHelper } from '../helpers'
 import { SERVER_CONFIG } from '../../config'
 import { OTPRouter } from './OTP'
 import { StudentRouter } from './Student'
+import { CompanyRouter } from './Company'
+import { JobRouter } from './Job'
 
 const { version } = packageJSON
 
@@ -14,6 +16,8 @@ const { SERVICE_NAME } = SERVER_CONFIG
 const Routes = [
   { path: '/otp', router: OTPRouter },
   { path: '/student', router: StudentRouter },
+  { path: '/company', router: CompanyRouter },
+  { path: '/job', router: JobRouter },
 
 ]
 Routes.init = (app) => {
