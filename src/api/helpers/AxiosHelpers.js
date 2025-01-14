@@ -18,7 +18,6 @@ export const AxiosHelper = {
     try {
       await axios(OPTIONS)
     } catch (error) {
-      // console.log('error in API Crash')
     }
   }
 }

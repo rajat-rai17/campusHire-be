@@ -23,7 +23,6 @@ const updateStudent = async (header, body) => {
         $set: bodyData
     }
     const result = await MONGO_MODEL.mongoFindOneAndUpdate('students', query, updateObj)
-    console.log("🚀 ~ removeStudent ~ result:", result)
     if (result?.lastErrorObject?.updatedExisting) {
         return { status: true, message:"Student updated successfully" }
     }
@@ -39,7 +38,6 @@ const removeStudent = async (header, body) => {
             isDeleted:true
         }
     }
-    console.log("🚀 ~ removeStudent ~ query:", query)
     const result = await MONGO_MODEL.mongoFindOneAndUpdate('students', query, updateObj)
     
     if (!result) {
