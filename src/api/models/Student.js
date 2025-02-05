@@ -31,7 +31,7 @@ const updateStudent = async (header, body) => {
 
 const removeStudent = async (header, body) => {
     const { tokenData = { }, studentId } = body
-    const query = { studentId }
+    const query = { studentId: +studentId }
     const updateObj = { 
         $set: {
             status:false,
@@ -47,13 +47,31 @@ const removeStudent = async (header, body) => {
 }
 
 const listStudent = async (header, body) => {
-    const { tokenData = { } } = body
-    //pagination & filter required
+    const { tokenData = { }, search, pagination  } = body
+    let { perPage = 10, page = 1 } = pagination
+    //pagination required
     const query = { status: true }
-    const projection  = { studentId:1, name:1, email:1, mobileNo:1, program:1, _id:0 }
-    let result = await MONGO_MODEL.mongoFind('students', query, {projection})
+    if(search) {
+        query.$or = [
+            { studentId: { $regex: search, $options: 'i' } },
+            { name: { $regex: search, $options: 'i' } },
+            { email: { $regex: search, $options: 'i' } },
+            { mobileNo: { $regex: search, $options: 'i' } },
+            { program: { $regex: search, $options: 'i' } },
+        ]
+    }
+    
+    //pagination
+    page = page - 1 
+    const limit = perPage
+    const skip = perPage * page
 
-    return { status: true, data : result }
+
+    const projection  = { studentId:1, name:1, email:1, mobileNo:1, program:1, _id:0 }
+    let result = await MONGO_MODEL.mongoFind('students', query, {projection, sort: { _id: -1 }, limit, skip })
+    let totalRecords = await MONGO_MODEL.mongoCountDocuments('students', query)
+    if(!totalRecords) totalRecords = 0
+    return { status: true, data : result, totalRecords }
 }
 
 export const StudentModel = {

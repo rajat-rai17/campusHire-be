@@ -8,9 +8,10 @@ const createStudent = async (request, response, next) => {
   const { header, body } = request
 
   const result = await StudentModel.createStudent(header, body) 
-  const { status = true, statusCode = 400, message = 'Something went wrong' } = result
-  let responseBody = {}
-  status === false ? responseBody = new ResponseBody(statusCode, message) : responseBody = new ResponseBody(200, 'Success', result)
+  // const { status = true, statusCode = 400, message = 'Something went wrong' } = result
+  // let responseBody = {}
+  // status === false ? responseBody = new ResponseBody(statusCode, message) : responseBody = new ResponseBody(200, 'Success', result)
+  const responseBody = new ResponseBody(200,  'Success', result)
   response.body = responseBody
 
   next()
@@ -20,9 +21,10 @@ const updateStudent = async (request, response, next) => {
   const { header, body } = request
 
   const result = await StudentModel.updateStudent(header, body) 
-  const { status = true, statusCode = 400, message = 'Something went wrong' } = result
-  let responseBody = {}
-  status === false ? responseBody = new ResponseBody(statusCode, message) : responseBody = new ResponseBody(200, 'Success', result)
+  // const { status = true, statusCode = 400, message = 'Something went wrong' } = result
+  // let responseBody = {}
+  // status === false ? responseBody = new ResponseBody(statusCode, message) : responseBody = new ResponseBody(200, 'Success', result)
+  const responseBody = new ResponseBody(200,  'Success', result)
   response.body = responseBody
 
   next()
