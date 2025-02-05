@@ -63,6 +63,4 @@ export const StudentController = {
   updateStudent,
   removeStudent,
   listStudent
-  
-
 }

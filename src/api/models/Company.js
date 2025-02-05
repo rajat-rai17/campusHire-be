@@ -23,6 +23,7 @@ const updateCompany = async (header, body) => {
         $set: bodyData
     }
     const result = await MONGO_MODEL.mongoFindOneAndUpdate('company', query, updateObj)
+    console.log("🚀 ~ removeCompany ~ result:", result)
     if (result?.lastErrorObject?.updatedExisting) {
         return { status: true, message:"Company updated successfully" }
     }
@@ -38,6 +39,7 @@ const removeCompany = async (header, body) => {
             isDeleted:true
         }
     }
+    console.log("🚀 ~ removeCompany ~ query:", query)
     const result = await MONGO_MODEL.mongoFindOneAndUpdate('company', query, updateObj)
     
     if (!result) {
@@ -50,7 +52,7 @@ const listCompany = async (header, body) => {
     const { tokenData = { } } = body
     //pagination & filter required
     const query = { status: true }
-    const projection  = { companyId:1, name:1, email:1, mobileNo:1, location:1, _id:0  }
+    const projection  = { companyId:1, name:1, email:1, mobileNo:1, type:1, _id:0  }
     let result = await MONGO_MODEL.mongoFind('company', query, {projection})
 
     return { status: true, data : result }
