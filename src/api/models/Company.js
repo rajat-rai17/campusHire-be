@@ -1,4 +1,5 @@
 'use strict'
+import { type } from 'os';
 import { AppConstants } from '../constants'
 import { MONGO_MODEL } from './MongoDB';
 
@@ -32,7 +33,7 @@ const updateCompany = async (header, body) => {
 
 const removeCompany = async (header, body) => {
     const { tokenData = { }, companyId } = body
-    const query = { companyId }
+    const query = { companyId: +companyId }
     const updateObj = { 
         $set: {
             status:false,
@@ -49,13 +50,30 @@ const removeCompany = async (header, body) => {
 }
 
 const listCompany = async (header, body) => {
-    const { tokenData = { } } = body
-    //pagination & filter required
+    const { tokenData = { }, search, pagination  } = body
+    let { perPage = 10, page = 1 } = pagination
+    //pagination required
     const query = { status: true }
-    const projection  = { companyId:1, name:1, email:1, mobileNo:1, location:1, _id:0  }
-    let result = await MONGO_MODEL.mongoFind('company', query, {projection})
+    if(search) {
+        query.$or = [
+            { companyIdId: { $regex: search, $options: 'i' } },
+            { name: { $regex: search, $options: 'i' } },
+            { email: { $regex: search, $options: 'i' } },
+            { mobileNo: { $regex: search, $options: 'i' } },
+            { type: { $regex: search, $options: 'i' } },
+        ]
+    }
+    
+    //pagination
+    page = page - 1 
+    const limit = perPage
+    const skip = perPage * page
 
-    return { status: true, data : result }
+    const projection  = { companyId:1, name:1, email:1, mobileNo:1, type:1, _id:0 }
+    let result = await MONGO_MODEL.mongoFind('company', query, {projection, sort: { _id: -1 }, limit, skip })
+    let totalRecords = await MONGO_MODEL.mongoCountDocuments('company', query)
+    if(!totalRecords) totalRecords = 0
+    return { status: true, data : result, totalRecords }
 }
 
 export const CompanyModel = {

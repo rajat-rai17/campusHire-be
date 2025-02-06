@@ -9,9 +9,10 @@ const createCompany = async (request, response, next) => {
 
   const result = await CompanyModel.createCompany(header, body) 
   const { status = true, statusCode = 400, message = 'Something went wrong' } = result
-  let responseBody = {}
-  status === false ? responseBody = new ResponseBody(statusCode, message) : responseBody = new ResponseBody(200, 'Success', result)
-  response.body = responseBody
+  //let responseBody = {}
+  //status === false ? responseBody = new ResponseBody(statusCode, message) : responseBody = new ResponseBody(200, 'Success', result)
+  //response.body = responseBody
+  const responseBody = new ResponseBody(200,  'Success', result)
 
   next()
 }
@@ -21,9 +22,10 @@ const updateCompany = async (request, response, next) => {
 
   const result = await CompanyModel.updateCompany(header, body) 
   const { status = true, statusCode = 400, message = 'Something went wrong' } = result
-  let responseBody = {}
-  status === false ? responseBody = new ResponseBody(statusCode, message) : responseBody = new ResponseBody(200, 'Success', result)
-  response.body = responseBody
+  //let responseBody = {}
+  //status === false ? responseBody = new ResponseBody(statusCode, message) : responseBody = new ResponseBody(200, 'Success', result)
+  //response.body = responseBody
+  const responseBody = new ResponseBody(200,  'Success', result)
 
   next()
 }
