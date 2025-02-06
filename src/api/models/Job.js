@@ -50,7 +50,7 @@ const listJob = async (header, body) => {
     const { tokenData = { } } = body
     //pagination & filter required
     const query = { status: true }
-    const projection  = { jobId:1, title:1, workMode:1, interviewDate:1, deadlineDate:1, location:1, _id:0  }
+    const projection  = { jobId:1, title:1, workMode:1, interviewDate:1, location:1, salary:1,_id:0  }
     let result = await MONGO_MODEL.mongoFind('jobs', query, {projection})
 
     return { status: true, data : result }
