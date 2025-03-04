@@ -53,6 +53,16 @@ const listJob = async (request, response, next) => {
   next()
 }
 
+const masterData = async (request, response, next) => {
+  const { header, body } = request
+
+  const result = await JobModel.masterData(header, body) 
+  const responseBody = new ResponseBody(200,  'Success', result)
+  response.body = responseBody
+
+  next()
+}
+
 
 
 
@@ -60,5 +70,6 @@ export const JobController = {
   createJob,
   updateJob,
   removeJob,
-  listJob
+  listJob,
+  masterData
 }

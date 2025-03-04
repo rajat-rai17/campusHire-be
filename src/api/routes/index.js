@@ -8,6 +8,7 @@ import { OTPRouter } from './OTP'
 import { StudentRouter } from './Student'
 import { CompanyRouter } from './Company'
 import { JobRouter } from './Job'
+import { NoticeRouter } from './Notice'
 
 const { version } = packageJSON
 
@@ -18,7 +19,7 @@ const Routes = [
   { path: '/student', router: StudentRouter },
   { path: '/company', router: CompanyRouter },
   { path: '/job', router: JobRouter },
-
+  {path: '/notice', router: NoticeRouter}
 ]
 Routes.init = (app) => {
   if (!app || !app.use) {
