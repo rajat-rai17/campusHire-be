@@ -1,22 +1,23 @@
 'use strict'
-
+import { AppConstants } from '../constants'
 import { MONGO_MODEL } from './MongoDB'
 
 const createNotice = async (header, body) => {
-  let { tokenData = {}, ...bodyData } = body
+  const { tokenData = { }, ...bodyData } = body
   bodyData.status = true
-
-  // Generate a unique noticeId
-  const noticeId = await MONGO_MODEL.mongoFindOneAndUpdate(
-    'counter',
-    { noticeIdSeq: { $exists: true } },
-    { $inc: { noticeIdSeq: 1 } }
-  )
-
+  if(bodyData.programs){
+      bodyData.programId = bodyData.programs.value
+      bodyData.programName = bodyData.programs.text
+      delete bodyData.programs
+  }
+  const noticeId= await MONGO_MODEL.mongoFindOneAndUpdate('counter', { noticeIdSeq: {$exists:true} }, { $inc: { noticeIdSeq: 1 } })
   bodyData.noticeId = noticeId.value.noticeIdSeq
+  const result = await MONGO_MODEL.mongoFindOne('notice', { noticeId, isDeleted:{$exists:false} })
+  if(result) {
+      return { status: false, message: "Notice already exists" }
+  }
   await MONGO_MODEL.mongoInsertOne('notice', bodyData)
-
-  return { status: true, message: 'Notice created successfully' }
+  return { status: true, message:"Notice created successfully" }
 }
 
 const updateNotice = async (header, body) => {
@@ -33,21 +34,20 @@ const updateNotice = async (header, body) => {
 }
 
 const removeNotice = async (header, body) => {
-  const { tokenData = {}, noticeId } = body
-  const query = { noticeId: +noticeId }
-  const updateObj = {
-    $set: {
-      status: false,
-      isDeleted: true
-    }
+  const { tokenData = { }, noticeId } = body
+  const query = { noticeId : +noticeId,}
+  const updateObj = { 
+      $set: {
+          status:false,
+          isDeleted:true
+      }
   }
-
   const result = await MONGO_MODEL.mongoFindOneAndUpdate('notice', query, updateObj)
-
+  
   if (!result) {
-    return { status: false, message: 'Notice not found' }
+      return { status: false, message: "Notice not found" }
   }
-  return { status: true, message: 'Notice removed successfully' }
+  return { status: true, message:"Notice updated successfully" }
 }
 
 const listNotice = async (header, body) => {
@@ -58,7 +58,6 @@ const listNotice = async (header, body) => {
   if (search) {
     query.$or = [
       { noticeId: { $regex: search, $options: 'i' } },
-      { title: { $regex: search, $options: 'i' } }
     ]
   }
 
@@ -69,8 +68,8 @@ const listNotice = async (header, body) => {
   const projection = {
     noticeId: 1,
     title: 1,
-    attachment: 1,
-    program: 1,
+    programName: 1,
+    programId: 1,
     createdAt: 1,
     _id: 0
   }
@@ -88,9 +87,54 @@ const listNotice = async (header, body) => {
   return { status: true, data: result, totalRecords }
 }
 
+const masterData = async (header, body) => {
+  const { tokenData = {}, ...bodyData } = body;
+  const dataRequired = bodyData.dataRequired || [];
+
+  const queryMap = {
+      programData: {
+          collection: "program",
+          filter: {},
+          projection: { programId: 1, name: 1, _id: 0 }
+      },
+  };
+
+  // Generate queries dynamically
+  const queries = dataRequired
+      .filter((key) => queryMap[key]) // Ensure only valid keys are used
+      .map(async (key) => {
+          try {
+              const data = await MONGO_MODEL.mongoFind(
+                  queryMap[key].collection,
+                  queryMap[key].filter,
+                  { projection: queryMap[key].projection }
+              );
+              return { key, status: "fulfilled", value: data };
+          } catch (error) {
+              return { key, status: "rejected", reason: error.message };
+          }
+      });
+
+  // Execute queries in parallel
+  const resultsArray = await Promise.allSettled(queries);
+
+  // Transform results into a structured response
+  const result = {};
+  resultsArray.forEach(({ status, value, reason }) => {
+      if (status === "fulfilled") {
+          result[value.key] = value.value;
+      } else {
+          console.error(`Query failed for ${value.key}: ${reason}`);
+      }
+  });
+
+  return result;
+};
+
 export const NoticeModel = {
   createNotice,
   updateNotice,
   removeNotice,
-  listNotice
+  listNotice,
+  masterData
 }
