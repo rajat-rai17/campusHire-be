@@ -3,11 +3,14 @@
 import Express from 'express'
 import { watchTower } from '../helpers'
 import { NoticeController } from '../controllers'
-import { SendResponse } from '../../lib'
+import { jwtExtractor,SendResponse } from '../../lib'
 
 const { createNotice, updateNotice, removeNotice, listNotice, masterData } = NoticeController
 const { sendResponse } = SendResponse
 const NoticeRouter = new Express.Router()
+
+NoticeRouter.use(jwtExtractor)
+
 
 NoticeRouter.post('/create', watchTower(createNotice))
 NoticeRouter.post('/update', watchTower(updateNotice))

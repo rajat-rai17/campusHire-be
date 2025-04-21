@@ -52,7 +52,7 @@ const removeNotice = async (header, body) => {
 
 const listNotice = async (header, body) => {
   const { tokenData = {}, search, pagination } = body
-  let { perPage = 10, page = 1 } = pagination
+  let { perPage = 10, page = 1 } = pagination || {}
   const query = { status: true }
 
   if (search) {
