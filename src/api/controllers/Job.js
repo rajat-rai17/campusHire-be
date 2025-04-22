@@ -88,6 +88,16 @@ const masterData = async (request, response, next) => {
 }
 
 
+const view = async (request, response, next) => {
+  const { header, body } = request
+
+  const result = await JobModel.view(header, body) 
+  const responseBody = new ResponseBody(200,  'Success', result)
+  response.body = responseBody
+
+  next()
+}
+
 
 
 export const JobController = {
@@ -97,5 +107,6 @@ export const JobController = {
   listJob,
   studentListJob,
   masterData,
-  applyJob
+  applyJob,
+  view
 }

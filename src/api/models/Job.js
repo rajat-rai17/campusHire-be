@@ -86,6 +86,7 @@ const applyJob = async (header, body) => {
             updatedAt,
             studentId: tokenData.userId,
             status: true,
+            name: tokenData.name,
         }
         await MONGO_MODEL.mongoInsertOne('appliedJobs', studentAppliedData)
 
@@ -199,6 +200,13 @@ const masterData = async (header, body) => {
     return result;
 };
 
+const view = async (header, body) => {
+    const { tokenData = {}, jobId } = body;
+    const query = { jobId, status: true }
+    const projection = { createdAt:1, name:1, studentId:1,_id:0 }
+    const result = await MONGO_MODEL.mongoFind('appliedJobs', query, { projection })
+    return result;
+};
 
 
 
@@ -209,5 +217,6 @@ export const JobModel = {
     listJob,
     masterData,
     studentListJob,
-    applyJob
+    applyJob,
+    view
 }

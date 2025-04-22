@@ -113,6 +113,31 @@ const getResume = async (req, res, next) => {
     res.status(404).json({ message: err.message })
   }
 }
+const downloadResume = async (req, res, next) => {
+  try {
+
+    const userId = req.query.studentId
+    // Get the resume filename from DB
+    const user = await MONGO_MODEL.mongoFindOne('users', { userId:+userId, status: true })
+    const resumeFile = user?.resumeFile
+    if (!resumeFile) throw new Error('No resume found for user.')
+
+    const filePath = path.join(process.cwd(), 'uploads', resumeFile)
+
+    // Ensure file exists
+    if (!fs.existsSync(filePath)) {
+      throw new Error('Resume file not found.')
+    }
+
+    res.download(filePath, resumeFile) // triggers download
+  } catch (err) {
+    console.error('getResume error:', err)
+    res.status(404).json({ message: err.message })
+  }
+}
+
+
+
 
 
 export const StudentController = {
@@ -121,5 +146,6 @@ export const StudentController = {
   removeStudent,
   listStudent,
   uploadResume,
-  getResume
+  getResume,
+  downloadResume
 }

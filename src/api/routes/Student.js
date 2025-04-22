@@ -4,7 +4,7 @@ import Express from 'express'
 import { watchTower } from '../helpers'
 import { StudentController } from '../controllers'
 import { jwtExtractor, SendResponse, uploadResumeMiddleware } from '../../lib'
-const { createStudent, updateStudent, removeStudent, listStudent, uploadResume, getResume } = StudentController
+const { createStudent, updateStudent, removeStudent, listStudent, uploadResume, getResume,downloadResume } = StudentController
 
 const { sendResponse } = SendResponse
 const StudentRouter = new Express.Router()
@@ -16,6 +16,7 @@ StudentRouter.get('/getResume',jwtExtractor, watchTower(getResume))
 StudentRouter.post('/update', watchTower(updateStudent))
 StudentRouter.post('/remove', watchTower(removeStudent))
 StudentRouter.post('/list', watchTower(listStudent))
+StudentRouter.get('/downloadResume', watchTower(downloadResume))
 
 
 
