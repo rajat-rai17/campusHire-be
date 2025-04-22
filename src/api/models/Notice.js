@@ -57,7 +57,7 @@ const listNotice = async (header, body) => {
 
   if (search) {
     query.$or = [
-      { noticeId: { $regex: search, $options: 'i' } },
+      { title: { $regex: search, $options: 'i' } },
     ]
   }
 
@@ -80,6 +80,7 @@ const listNotice = async (header, body) => {
     limit,
     skip
   })
+  console.log("🚀 ~ listNotice ~ query:", JSON.stringify(query))
 
   let totalRecords = await MONGO_MODEL.mongoCountDocuments('notice', query)
   if (!totalRecords) totalRecords = 0

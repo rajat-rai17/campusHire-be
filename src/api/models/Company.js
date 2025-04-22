@@ -21,7 +21,6 @@ const updateCompany = async (header, body) => {
         $set: bodyData
     }
     const result = await MONGO_MODEL.mongoFindOneAndUpdate('company', query, updateObj)
-    console.log("🚀 ~ removeCompany ~ result:", result)
     if (result?.lastErrorObject?.updatedExisting) {
         return { status: true, message:"Company updated successfully" }
     }
@@ -37,7 +36,6 @@ const removeCompany = async (header, body) => {
             isDeleted:true
         }
     }
-    console.log("🚀 ~ removeCompany ~ query:", query)
     const result = await MONGO_MODEL.mongoFindOneAndUpdate('company', query, updateObj)
     
     if (!result) {

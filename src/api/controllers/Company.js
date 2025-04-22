@@ -19,7 +19,6 @@ const updateCompany = async (request, response, next) => {
   const result = await CompanyModel.updateCompany(header, body) 
   const responseBody = new ResponseBody(200,  'Success', result)
   response.body = responseBody
-C
   next()
 }
 

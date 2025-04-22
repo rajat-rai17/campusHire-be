@@ -3,7 +3,7 @@
 import Express from 'express'
 import mongoSanitize from 'express-mongo-sanitize'
 import cors from 'cors'
-
+import fileUpload from 'express-fileupload'
 import Routes from './api/routes'
 import server from './Server'
 import helmet from 'helmet'
@@ -20,6 +20,9 @@ App.disable('etag')
 App.use(cors(corsOptions))
 App.use(Express.json({ limit: BODY_LIMIT }))
 App.use(Express.urlencoded({ limit: BODY_LIMIT, extended: true, parameterLimit: PARAMETER_LIMIT }))
+// ✅ File upload middleware (must come before routes)
+// ✅ Parse JSON bodies
+App.use(fileUpload())
 // data sanitization against NOSql query injection
 // App.use(Logger.pinoHttpLogger)
 App.use(mongoSanitize())
