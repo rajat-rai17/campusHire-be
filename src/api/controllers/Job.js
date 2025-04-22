@@ -41,10 +41,34 @@ const removeJob = async (request, response, next) => {
   next()
 }
 
+const applyJob = async (request, response, next) => {
+  const { header, body } = request
+
+  const result = await JobModel.applyJob(header, body) 
+  const { status = true, statusCode = 400, message = 'Something went wrong' } = result
+  let responseBody = {}
+  status === false ? responseBody = new ResponseBody(statusCode, message) : responseBody = new ResponseBody(200, 'Success', result)
+  response.body = responseBody
+
+  next()
+}
+
 const listJob = async (request, response, next) => {
   const { header, body } = request
 
   const result = await JobModel.listJob(header, body) 
+  const { status = true, statusCode = 400, message = 'Something went wrong' } = result
+  let responseBody = {}
+  status === false ? responseBody = new ResponseBody(statusCode, message) : responseBody = new ResponseBody(200, 'Success', result)
+  response.body = responseBody
+
+  next()
+}
+
+const studentListJob = async (request, response, next) => {
+  const { header, body } = request
+
+  const result = await JobModel.studentListJob(header, body) 
   const { status = true, statusCode = 400, message = 'Something went wrong' } = result
   let responseBody = {}
   status === false ? responseBody = new ResponseBody(statusCode, message) : responseBody = new ResponseBody(200, 'Success', result)
@@ -71,5 +95,7 @@ export const JobController = {
   updateJob,
   removeJob,
   listJob,
-  masterData
+  studentListJob,
+  masterData,
+  applyJob
 }

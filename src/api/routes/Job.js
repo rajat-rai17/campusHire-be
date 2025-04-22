@@ -3,8 +3,8 @@
 import Express from 'express'
 import { watchTower } from '../helpers'
 import { JobController } from '../controllers'
-import { SendResponse } from '../../lib'
-const { createJob  , updateJob , removeJob, listJob, masterData } = JobController
+import { jwtExtractor, SendResponse } from '../../lib'
+const { createJob  , updateJob , removeJob, listJob, masterData, studentListJob, applyJob } = JobController
 
 const { sendResponse } = SendResponse
 const JobRouter = new Express.Router()
@@ -13,7 +13,9 @@ const JobRouter = new Express.Router()
 JobRouter.post('/create', watchTower(createJob))
 JobRouter.post('/update', watchTower(updateJob))
 JobRouter.post('/remove', watchTower(removeJob))
-JobRouter.post('/list', watchTower(listJob))
+JobRouter.post('/applyJob',jwtExtractor, watchTower(applyJob))
+JobRouter.post('/list', jwtExtractor, watchTower(listJob))
+JobRouter.post('/studentListJob', watchTower(studentListJob))
 JobRouter.post('/masterData', watchTower(masterData))
 
 
