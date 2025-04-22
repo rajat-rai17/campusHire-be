@@ -85,6 +85,7 @@ const applyJob = async (header, body) => {
             createdAt,
             updatedAt,
             studentId: tokenData.userId,
+            status: true,
         }
         await MONGO_MODEL.mongoInsertOne('appliedJobs', studentAppliedData)
 
@@ -95,32 +96,6 @@ const applyJob = async (header, body) => {
 
 
 const listJob = async (header, body) => {
-    let { tokenData = { }, search, pagination, isApplied  } = body
-    let { perPage = 10, page = 1 } = pagination
-    const query = { status: true, 
-        ...(isApplied && { studentIds: tokenData.userId }),
-     }
-    if(search) {
-        query.$or = [
-            { jobId: { $regex: search, $options: 'i' } },
-            { title: { $regex: search, $options: 'i' } },
-            { location: { $regex: search, $options: 'i' } },
-            { companyName: { $regex: search, $options: 'i' } },
-            { type: { $regex: search, $options: 'i' } },
-        ]
-    }
-    page = page - 1 
-    const limit = perPage
-    const skip = perPage * page
-    const projection  = { jobId:1, title:1, type:1, interviewDate:1, location:1, locationType:1,programName:1,companyName:1, programId:1, companyId:1 } 
-    const repoName = isApplied ? 'appliedJobs' : 'jobs'
-    let result = await MONGO_MODEL.mongoFind(repoName, query, {projection, sort: { _id: -1 }, limit, skip})
-    let totalRecords = await MONGO_MODEL.mongoCountDocuments('jobs', query)
-    if(!totalRecords) totalRecords = 0
-    return { status: true, data : result, totalRecords }
-}
-
-const studentListJob = async (header, body) => {
     const { tokenData = { }, search, pagination  } = body
     let { perPage = 10, page = 1 } = pagination
     const query = { status: true }
@@ -141,6 +116,37 @@ const studentListJob = async (header, body) => {
     let totalRecords = await MONGO_MODEL.mongoCountDocuments('jobs', query)
     if(!totalRecords) totalRecords = 0
     return { status: true, data : result, totalRecords }
+}
+
+const studentListJob = async (header, body) => {
+   
+    let { tokenData = { }, search, pagination, isApplied  } = body
+    let { perPage = 10, page = 1 } = pagination
+    const query = { status: true, 
+        ...(isApplied && { studentId: tokenData.userId }),
+        ...(!isApplied && { studentIds: {$ne: tokenData.userId }  }),
+     }
+    if(search) {
+        query.$or = [
+            { jobId: { $regex: search, $options: 'i' } },
+            { title: { $regex: search, $options: 'i' } },
+            { location: { $regex: search, $options: 'i' } },
+            { companyName: { $regex: search, $options: 'i' } },
+            { type: { $regex: search, $options: 'i' } },
+        ]
+    }
+    page = page - 1 
+    const limit = perPage
+    const skip = perPage * page
+    const projection  = { jobId:1, title:1, type:1, interviewDate:1, location:1, locationType:1,programName:1,companyName:1, programId:1, companyId:1 } 
+    const repoName = isApplied ? 'appliedJobs' : 'jobs'
+    let result = await MONGO_MODEL.mongoFind(repoName, query, {projection, sort: { _id: -1 }, limit, skip})
+    let totalRecords = await MONGO_MODEL.mongoCountDocuments('jobs', query)
+    if(!totalRecords) totalRecords = 0
+    return { status: true, data : result, totalRecords }
+    
+    
+    
 }
 
 

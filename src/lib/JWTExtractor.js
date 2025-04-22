@@ -19,7 +19,6 @@ const jwtExtractor = async (request, response, next) => {
   const token = authorization.split(' ')[1]; // Extract token after 'Bearer '
   
     const decoded = jwt.verify(token, AppConstants.jwtSecret);
-    console.log("🚀 ~ jwtExtractor ~ decoded:", decoded)
     if (!decoded) {
       return response.status(403).json({ status: false, message: 'Invalid or Expired Token' });
     }

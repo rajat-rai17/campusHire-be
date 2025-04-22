@@ -14,8 +14,8 @@ JobRouter.post('/create', watchTower(createJob))
 JobRouter.post('/update', watchTower(updateJob))
 JobRouter.post('/remove', watchTower(removeJob))
 JobRouter.post('/applyJob',jwtExtractor, watchTower(applyJob))
-JobRouter.post('/list', jwtExtractor, watchTower(listJob))
-JobRouter.post('/studentListJob', watchTower(studentListJob))
+JobRouter.post('/list', watchTower(listJob))
+JobRouter.post('/studentListJob', jwtExtractor, watchTower(studentListJob))
 JobRouter.post('/masterData', watchTower(masterData))
 
 
