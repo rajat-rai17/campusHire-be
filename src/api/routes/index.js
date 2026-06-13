@@ -10,6 +10,7 @@ import { CompanyRouter } from './Company'
 import { JobRouter } from './Job'
 import { NoticeRouter } from './Notice'
 import { AuthRouter } from './Auth'
+import { ChatbotRouter } from './Chatbot'
 
 const { version } = packageJSON
 
@@ -21,7 +22,8 @@ const Routes = [
   { path: '/company', router: CompanyRouter },
   { path: '/job', router: JobRouter },
   {path: '/notice', router: NoticeRouter},
-  { path:'/auth', router: AuthRouter}
+  { path:'/auth', router: AuthRouter},
+  { path: '/chatbot', router: ChatbotRouter }
 ]
 Routes.init = (app) => {
   if (!app || !app.use) {
