@@ -31,4 +31,8 @@ App.use(mongoSanitize())
 // Initialize Routes
 Routes.init(App)
 // Start Server
-server(App)
+if (!process.env.VERCEL) {
+  server(App)
+}
+
+export default App
