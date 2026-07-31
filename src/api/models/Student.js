@@ -92,8 +92,8 @@ const uploadResume = async (tokenData, fileName) => {
         }
     }
     const result = await MONGO_MODEL.mongoFindOneAndUpdate('users', query, updateObj)
-    if (result?.lastErrorObject?.updatedExisting) {
-        return { status: true, message:"Resume uploaded successfully" }
+    if (result && result.value) {
+        return { status: true, message:"Resume uploaded successfully", resumeFile: fileName }
     }
     return { status: false, message: "Resume not uploaded" }
 }
